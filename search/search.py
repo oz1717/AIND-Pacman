@@ -67,6 +67,28 @@ def tinyMazeSearch(problem):
   w = Directions.WEST
   return  [s,s,w,s,w,w,s,w]
 
+
+def graph_search(problem, fringe):
+    """Search through the successors of a problem to find a goal.
+    The argument fringe should be an empty queue.
+    If two paths reach a state, only use the best one. [Fig. 3.18]"""
+    closed = {}
+    fringe.push(problem.getStartState())
+    path = []
+    while fringe:
+        node = fringe.pop()
+        print(node)
+        if problem.isGoalState(node):
+            #path.append(node)
+            return path
+        if node not in closed:
+            closed[node] = True
+            #fringe.push(problem.getSuccessors(node))
+            for i in range(len(problem.getSuccessors(node))):
+                fringe.push(problem.getSuccessors(node)[i][0])
+                path.append(problem.getSuccessors(node)[i][1])
+    return path
+
 def depthFirstSearch(problem):
   """
   Search the deepest nodes in the search tree first
@@ -84,18 +106,12 @@ def depthFirstSearch(problem):
   print "Start's successors:", problem.getSuccessors(problem.getStartState())
   """
   "*** YOUR CODE HERE ***"
-    #function GRAPH-SEARCH(problem) returns a solution, or failure
+  #print "Start:", problem.getStartState()
+  #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+  #print "Start's successors:", problem.getSuccessors(problem.getStartState())
+  return graph_search(problem, util.Stack())
 
-    #initialize the frontier using the initial state of problem
-    
-    #initialize the explored set to be empty
-    #loop do
-    #if the frontier is empty then return failure
-    #choose a leaf node and remove it from the frontier
-    #if the node contains a goal state then return the corresponding solution
-    #add the node to the explored set
-    #expand the chosen node, adding the resulting nodes to the frontier
-    #only if not in the frontier or explored set
+
 
 def breadthFirstSearch(problem):
   """

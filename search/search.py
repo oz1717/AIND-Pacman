@@ -72,22 +72,26 @@ def graph_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
-    closed = {}
-    fringe.push(problem.getStartState())
-    path = []
+
+    visited = set()
+    fringe.push((problem.getStartState(), []))
+
     while fringe:
-        node = fringe.pop()
-        print(node)
+        (node, path) = fringe.pop()
+        #node = node[0]
         if problem.isGoalState(node):
             #path.append(node)
             return path
-        if node not in closed:
-            closed[node] = True
-            #fringe.push(problem.getSuccessors(node))
-            for i in range(len(problem.getSuccessors(node))):
-                fringe.push(problem.getSuccessors(node)[i][0])
-                path.append(problem.getSuccessors(node)[i][1])
-    return path
+        print(visited)
+        print(node)
+        visited.add(node)
+        #visited.add(node[0])
+        successors = problem.getSuccessors(node)
+        for state, action, cost in successors:
+            if state not in visited:
+                fringe.push((state, path + [action]))
+
+    #return path
 
 def depthFirstSearch(problem):
   """
@@ -119,12 +123,26 @@ def breadthFirstSearch(problem):
   [2nd Edition: p 73, 3rd Edition: p 82]
   """
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  return graph_search(problem, util.Queue())
 
 def uniformCostSearch(problem):
   "Search the node of least total cost first. "
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  visited = set()
+  que = util.PriorityQueue()
+  que.push((problem.getStartState(), []), 0)
+
+  while que:
+    (node, path) = que.pop()
+    if problem.isGoalState(node):
+            #path.append(node)
+      return path
+    visited.add(node)
+    successors = problem.getSuccessors(node)
+    for state, action, cost in successors:
+      if state not in visited:
+        que.push((state, path + [action]), cost)
+
 
 def nullHeuristic(state, problem=None):
   """
@@ -136,7 +154,21 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
-  util.raiseNotDefined()
+  visited = set()
+  que = util.PriorityQueue()
+  que.push((problem.getStartState(), []), 0)
+
+  while que:
+    (node, path) = que.pop()
+    if problem.isGoalState(node):
+            #path.append(node)
+      return path
+    visited.add(node)
+    successors = problem.getSuccessors(node)
+    for state, action, cost in successors:
+      if state not in visited:
+        que.push((state, path + [action]), cost + heuristic(state, problem))
+
 
 
 # Abbreviations

@@ -316,12 +316,13 @@ class CornersProblem(search.SearchProblem):
       corners_visited = state[1]
       dx, dy = Actions.directionToVector(action)
       nextx, nexty = int(x + dx), int(y + dy)
-      if not self.walls[nextx][nexty]:
-        if (nextx, nexty) in self.corners and (nextx, nexty) not in corners_visited:
-          corners_visited.append((nextx, nexty))
-        nextState = (nextx, nexty)
+      #if not self.walls[nextx][nexty]:
+    #    if (nextx, nexty) in self.corners and (nextx, nexty) not in corners_visited:
+      corners = tuple(x for x in corners_visited if x != (nextx, nexty))
+    #      corners_visited.append((nextx, nexty))
+      nextState = ((nextx, nexty), corners)
         #cost = self.costFn(nextState)
-        successors.append( ( nextState, action, 1) )
+      successors.append( ( nextState, action, 1) )
 
     # Bookkeeping for display purposes
     self._expanded += 1

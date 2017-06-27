@@ -68,30 +68,35 @@ def tinyMazeSearch(problem):
   return  [s,s,w,s,w,w,s,w]
 
 
-def graph_search(problem, fringe):
+def graph_search(problem, fringe, add_to_fringe_fn):
     """Search through the successors of a problem to find a goal.
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
 
     visited = set()
-    fringe.push((problem.getStartState(), []))
+    start = (problem.getStartState(), 0, []) # (node, cost, path)
+    #fringe.push((problem.getStartState(), []))
+    add_to_fringe_fn(fringe, start, 0)
 
     while fringe:
-        (node, path) = fringe.pop()
-        #node = node[0]
+        (node, cost, path) = fringe.pop()
         if problem.isGoalState(node):
-            #path.append(node)
             return path
-        print(visited)
-        print(node)
-        visited.add(node)
-        #visited.add(node[0])
-        successors = problem.getSuccessors(node)
-        for state, action, cost in successors:
-            if state not in visited:
-                fringe.push((state, path + [action]))
+        if not node in visited:
+            visited.add(node)
 
-    #return path
+        successors = problem.getSuccessors(node)
+        for child_node, child_action, child_cost in successors:
+            if state not in visited:
+                #fringe.push((state, path + [action]))
+                new_cost = cost + child_cost
+                new_path = path + [child_action]
+                new_state = (child_node, new_cost, new_path)
+                add_to_fringe_fn(fringe, new_state, new_cost)
+
+def add_to_fringe_fn(fringe, state, cost):
+    fringe.push(state)
+
 
 def depthFirstSearch(problem):
   """
@@ -113,7 +118,7 @@ def depthFirstSearch(problem):
   #print "Start:", problem.getStartState()
   #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
   #print "Start's successors:", problem.getSuccessors(problem.getStartState())
-  return graph_search(problem, util.Stack())
+  return graph_search(problem, util.Stack(), add_to_fringe_fn)
 
 
 
@@ -123,7 +128,7 @@ def breadthFirstSearch(problem):
   [2nd Edition: p 73, 3rd Edition: p 82]
   """
   "*** YOUR CODE HERE ***"
-  return graph_search(problem, util.Queue())
+  return graph_search(problem, util.Queue(), add_to_fringe_fn)
 
 def uniformCostSearch(problem):
   "Search the node of least total cost first. "

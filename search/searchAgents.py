@@ -288,8 +288,12 @@ class CornersProblem(search.SearchProblem):
   def isGoalState(self, state):
     "Returns whether this search state is a goal state of the problem"
     "*** YOUR CODE HERE ***"
-    print sorted(state[1])
-    return sorted(state[1]) == list(self.corners)
+    #print sorted(state[1])
+    #return sorted(state[1]) == list(self.corners)
+    return sorted(state[1]
+
+
+    ) == list(self.corners)
 
   def getSuccessors(self, state):
     """

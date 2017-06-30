@@ -78,12 +78,12 @@ def graph_search(problem, fringe, add_to_fringe_fn):
     #fringe.push((problem.getStartState(), []))
     add_to_fringe_fn(fringe, start, 0)
 
-    while fringe:
+    while not fringe.isEmpty():
         (node, cost, path) = fringe.pop()
         if problem.isGoalState(node):
             return path
-        if not node[0] in visited:
-            visited.add(node[0])
+        if not node in visited:
+            visited.add(node)
 
         successors = problem.getSuccessors(node)
         for child_node, child_action, child_cost in successors:
